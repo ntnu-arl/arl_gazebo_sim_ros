@@ -1,0 +1,275 @@
+<?xml version="1.0" ?>
+<sdf version='1.10'>
+  <world name='cosmos'>
+    <physics name='1ms' type='ignored'>
+      <max_step_size>0.01</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <plugin name='ignition::gazebo::systems::Physics' filename='libignition-gazebo-physics-system.so'/>
+    <plugin name='ignition::gazebo::systems::UserCommands' filename='libignition-gazebo-user-commands-system.so'/>
+    <plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='libignition-gazebo-scene-broadcaster-system.so'/>
+    <plugin name='ignition::gazebo::systems::Imu' filename='ignition-gazebo-imu-system'/>
+    <plugin name='ignition::gazebo::systems::Sensors' filename='ignition-gazebo-sensors-system'>
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <scene>
+      <ambient>1 1 1 1</ambient>
+      <background>0.300000012 0.699999988 0.899999976 1</background>
+      <shadows>false</shadows>
+      <grid>true</grid>
+    </scene>
+    <gravity>0 0 -9.8000000000000007</gravity>
+    <magnetic_field>5.5644999999999998e-06 2.2875799999999999e-05 -4.2388400000000002e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <model name='ground_plane'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>1 1</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <pose>0 0 0 0 0 0</pose>
+      <self_collide>false</self_collide>
+    </model>
+
+    <!-- <include>
+      <name>walls</name>
+      <uri>model://cargo_hold_structure</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+    
+    <include>
+      <name>bracket_toe_1</name>
+      <uri>model://bracket_toe</uri>
+      <pose>-4.3 0.8 0.2 0 0 0</pose>
+    </include>
+
+    <include>
+      <name>bracket_toe_1</name>
+      <uri>model://bracket_toe</uri>
+      <pose>-4.3 -1.7 0.2 0 0 0</pose>
+    </include>
+
+    <include>
+      <name>bracket_toe_3</name>
+      <uri>model://bracket_toe</uri>
+      <pose>-4.3 -4.2 0.2 0 0 0</pose>
+    </include> -->
+
+    <model name='walls'>
+      <pose>0 0 0 0 0 0</pose>
+      <static>true</static>
+      <link name='body'>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://cargo_hold_structure/meshes/small_tank_walls.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://cargo_hold_structure/meshes/small_tank_walls.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <self_collide>false</self_collide>
+    </model> 
+    <model name='bracket_toe_1'>
+      <pose>-4.3 0.8 0.2 0 0 0</pose>
+      <static>true</static>
+      <link name='body'>
+        <visual name='visual'>
+          <plugin name='ignition::gazebo::systems::Label' filename='ignition-gazebo-label-system'>
+            <label>100</label>
+          </plugin>
+          <geometry>
+            <mesh>
+              <uri>model://bracket_toe/meshes/bracket_toe.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://bracket_toe/meshes/bracket_toe.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <self_collide>false</self_collide>
+    </model>
+    <model name='bracket_toe_2'>
+      <pose>-4.3 -1.7 0.2 0 0 0</pose>
+      <static>true</static>
+      <link name='body'>
+        <visual name='visual'>
+          <plugin name='ignition::gazebo::systems::Label' filename='ignition-gazebo-label-system'>
+            <label>101</label>
+          </plugin>
+          <geometry>
+            <mesh>
+              <uri>model://bracket_toe/meshes/bracket_toe.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://bracket_toe/meshes/bracket_toe.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <self_collide>false</self_collide>
+    </model>
+    <model name='bracket_toe_3'>
+      <pose>-4.3 -4.2 0.2 0 0 0</pose>
+      <static>true</static>
+      <link name='body'>
+        <visual name='visual'>
+          <plugin name='ignition::gazebo::systems::Label' filename='ignition-gazebo-label-system'>
+            <label>102</label>
+          </plugin>
+          <geometry>
+            <mesh>
+              <uri>model://bracket_toe/meshes/bracket_toe.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://bracket_toe/meshes/bracket_toe.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <self_collide>false</self_collide>
+    </model>
+
+		<model name='horiz_web_frame_1'>
+      <pose>0 -2 5 0 0 0</pose>
+      <static>true</static>
+      <link name='body'>
+        <visual name='visual'>
+          <plugin name='ignition::gazebo::systems::Label' filename='ignition-gazebo-label-system'>
+            <label>102</label>
+          </plugin>
+          <geometry>
+            <mesh>
+              <uri>model://horiz_web_frame/meshes/horiz_web_frame.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://horiz_web_frame/meshes/horiz_web_frame.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <self_collide>false</self_collide>
+    </model>
+  </world>
+</sdf>

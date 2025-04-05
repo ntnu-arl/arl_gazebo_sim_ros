@@ -1,0 +1,46 @@
+<launch>
+  <!-- All settings -->
+  <arg name="robot_name" default="smb"/>
+  <arg name="gazebo_gui_en" default="true"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="rviz_en" default="true" />
+  <arg name="odometry_topic" default="/ground_truth/state" />
+  <arg name="launch_prefix" default=""/> <!-- gdb -ex run //args -->
+  <param name="use_sim_time" value="$(arg use_sim_time)"/>
+
+  <!-- Config files -->
+  <arg name="world_file" default="$(find arl_gazebo_sim)/gzc/worlds/pittsburgh_mine.world"/>
+
+  <!-- Static TF -->
+  <node pkg="tf" type="static_transform_publisher" name="tf_53" args="0 0 0 0 0 0 world navigation 100" />
+
+  <env name="GAZEBO_MODEL_PATH" value="${GAZEBO_MODEL_PATH}:$(find subt_cave_sim)/models"/>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" value="$(arg world_file)"/>
+		<arg name="paused" value="false"/>
+		<arg name="use_sim_time" value="true"/>
+		<arg name="gui" value="$(arg gazebo_gui_en)"/>
+		<arg name="headless" value="false"/>
+		<arg name="debug" value="false"/>
+    <arg name="verbose" value="false"/>
+	</include>
+
+  <include file="$(find smb_gazebo)/launch/spawn_smb.launch">
+    <arg name="joystick" value="true"/>
+    <arg name="x" value="0.0" />
+    <arg name="y" value="0.0" />
+    <arg name="z" value="1.0" />
+  </include>
+
+  <include file="$(find smb_path_tracker)/launch/pure_pursuit_tracker.launch">
+    <arg name="use_action" value="false"/>
+    <arg name="path_topic" value="gbplanner_path"/>
+    <arg name="odometry_topic" value="$(arg odometry_topic)"/>
+    <arg name="vel_topic" value="/smb_velocity_controller/cmd_vel"/>
+    <arg name="robot_frame" value="base_link"/>
+  </include>
+
+  <node pkg="topic_tools" type="relay" name="vlp_relay" args="/velodyne_points /input_pointcloud" />
+  <node pkg="topic_tools" type="relay" name="front_lidar_relay" args="/lidar_front_points /input_pointcloud" />
+
+</launch>

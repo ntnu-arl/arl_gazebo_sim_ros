@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="world_name" default=""/>
+    <arg name="uav_name" default=""/>
+    <arg name="link_name" value="base_link"/>
+    <arg name="sensor_prefix" value="/world/$(arg world_name)/model/$(arg uav_name)/link/$(arg link_name)/sensor"/>
+    
+    <!-- <node
+        pkg="ros_ign_bridge"
+        type="parameter_bridge"
+        name="ros_ign_bridge_clock"
+        args="/clock@rosgraph_msgs/Clock[gz.msgs.Clock">
+    </node> -->
+    
+    <group ns="$(arg uav_name)">
+        <!-- Tf -->
+        <node 
+            pkg="ros_ign_bridge" 
+            type="parameter_bridge" 
+            name="ros_gz_bridge_tf" 
+            output="screen" 
+            args="/model/$(arg uav_name)/pose@tf2_msgs/TFMessage@gz.msgs.Pose_V
+                  /model/$(arg uav_name)/pose_static@tf2_msgs/TFMessage@gz.msgs.Pose_V">
+            <remap from="/model/$(arg uav_name)/pose" to="/tf"/>
+            <remap from="/model/$(arg uav_name)/pose_static" to="/tf_static"/>
+        </node>
+        <!-- Actuators Command -->
+        <!-- <node 
+            pkg="ros_ign_bridge" 
+            type="parameter_bridge" 
+            name="ros_gz_bridge_actuator" 
+            output="screen" 
+            args="/$(arg uav_name)/command/motor_speed@mav_msgs/Actuators@gz.msgs.Actuators">
+        </node> -->
+        <!-- Position control -->
+        <node 
+            pkg="ros_ign_bridge" 
+            type="parameter_bridge" 
+            name="ros_gz_bridge_pose" 
+            output="screen" 
+            args="/$(arg uav_name)/command/pose@geometry_msgs/Pose@gz.msgs.Pose">
+        </node>
+        <!-- Velocity control -->
+        <node 
+            pkg="ros_ign_bridge" 
+            type="parameter_bridge" 
+            name="ros_gz_bridge_twist" 
+            output="screen" 
+            args="/$(arg uav_name)/command/velocity@geometry_msgs/Twist@gz.msgs.Twist">
+        </node>
+        <!-- Odometry -->
+        <node 
+            pkg="ros_ign_bridge" 
+            type="parameter_bridge" 
+            name="ros_gz_bridge_odom" 
+            output="screen" 
+            args="/$(arg uav_name)/odometry@nav_msgs/Odometry@gz.msgs.Odometry">
+        </node>
+        <!-- IMU -->
+        <node 
+            pkg="ros_ign_bridge" 
+            type="parameter_bridge" 
+            name="ros_gz_bridge_imu" 
+            output="screen" 
+            args="/$(arg uav_name)/imu@sensor_msgs/Imu@gz.msgs.IMU">
+        </node>
+        <!-- LiDAR -->
+        <node 
+            pkg="ros_ign_bridge" 
+            type="parameter_bridge" 
+            name="ros_gz_bridge_lidar3d" 
+            output="screen" 
+            args="/$(arg uav_name)/lidar@sensor_msgs/LaserScan@gz.msgs.LaserScan
+                  /$(arg uav_name)/lidar/point@sensor_msgs/PointCloud2@gz.msgs.PointCloudPacked
+                  /$(arg uav_name)/lidar/points@sensor_msgs/PointCloud2@gz.msgs.PointCloudPacked">
+        </node>
+        <!--Front RGBD camera -->
+        <node
+            pkg="ros_ign_bridge"
+            type="parameter_bridge"
+            name="ros_gz_bridge_camera"
+            args="$(arg sensor_prefix)/camera_front/camera_info@sensor_msgs/CameraInfo[gz.msgs.CameraInfo
+                  $(arg sensor_prefix)/camera_front/image@sensor_msgs/Image[gz.msgs.Image">
+            <remap from="$(arg sensor_prefix)/camera_front/camera_info" to="front/camera_info"/>
+            <remap from="$(arg sensor_prefix)/camera_front/image" to="front/image_raw"/>
+        </node>
+
+        <node
+            pkg="ros_ign_bridge"
+            type="parameter_bridge"
+            name="ros_gz_bridge_camera_depth"
+            args="$(arg sensor_prefix)/depth_camera_front/camera_info@sensor_msgs/CameraInfo[gz.msgs.CameraInfo
+                  $(arg sensor_prefix)/depth_camera_front/depth_image@sensor_msgs/Image[gz.msgs.Image
+                  $(arg sensor_prefix)/depth_camera_front/depth_image/points@sensor_msgs/PointCloud2[gz.msgs.PointCloudPacked">
+            <remap from="$(arg sensor_prefix)/depth_camera_front/camera_info" to="front/camera_info"/>
+            <remap from="$(arg sensor_prefix)/depth_camera_front/depth_image" to="front/depth_image"/>
+            <remap from="$(arg sensor_prefix)/depth_camera_front/depth_image/points" to="front/depth_points"/>
+        </node>
+
+         <!-- Camera joint pitch position control -->
+        <node 
+            pkg="ros_ign_bridge" 
+            type="parameter_bridge" 
+            name="ros_gz_bridge_joint_pitch" 
+            output="screen" 
+            args="/rotatable_camera_pitch@std_msgs/Float64@gz.msgs.Double">
+            <remap from="/rotatable_camera_pitch" to="/camera_joint_pitch"/>
+        </node>
+
+        <!-- Camera joint state -->
+        <node 
+            pkg="ros_ign_bridge" 
+            type="parameter_bridge" 
+            name="ros_gz_bridge_joint_pitch_state" 
+            output="screen" 
+            args="/rotatable_camera_pitch_state@sensor_msgs/JointState@gz.msgs.Model">
+            <remap from="/rotatable_camera_pitch_state" to="/camera_joint_pitch_state"/>
+        </node>
+
+
+        <!-- Joint State -->
+        <!-- <node 
+            pkg="ros_ign_bridge" 
+            type="parameter_bridge" 
+            name="ros_gz_bridge_joint_state" 
+            output="screen" 
+            args="/$(arg uav_name)/joint_state@sensor_msgs/JointState@gz.msgs.Model">
+        </node> -->
+    </group>
+
+
+   
+</launch>

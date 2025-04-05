@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- All settings -->
+    <arg name="world_name" default="cosmos" />
+    <arg name="uav_name" default="rmf_owl"/>
+    <arg name="verbosity" default="0"/>
+    <arg name="launch_prefix" default=""/>
+
+    <!-- Config files -->
+    <arg name="world_file" default="$(find arl_gazebo_sim)/gz/worlds/cargo_hold.world"/>
+    
+    <!-- Gazebo sim -->
+    <env name="GZ_SIM_RESOURCE_PATH" value="${GAZEBO_MODEL_PATH}:$(find subt_cave_sim)/models"/>
+    <include file="$(find ros_ign_gazebo)/launch/ign_gazebo.launch">
+        <arg name="ign_args" value="-r -v $(arg verbosity) $(arg world_file)"/>
+    </include>
+
+    <!-- Spawn UAV robot -->
+    <include file="$(find arl_gazebo_sim)/gz/uav_sim/uav_gazebo/launch/spawn_uav.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="uav_name" value="$(arg uav_name)" />
+        <arg name="x" value="0" />
+        <arg name="y" value="-5" />
+        <arg name="z" value="1.5" />
+    </include>
+
+    <arg name="odometry_topic" default="/$(arg uav_name)/ground_truth/odometry_throttled"/>
+    <group ns="$(arg uav_name)">
+        <node name="odo_throttler" type="throttle" pkg="topic_tools" args="messages odometry 100 ground_truth/odometry_throttled" />
+         <!-- Position controller  -->
+        <node name="uav_path_follower_node" pkg="uav_gz_control" type="uav_path_follower_node" output="screen">
+            <remap from="odometry" to="$(arg odometry_topic)" />
+            <remap from="command/path" to="/gbplanner_path" />
+        </node>
+    </group>
+</launch>

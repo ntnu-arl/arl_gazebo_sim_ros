@@ -2,7 +2,7 @@
 <launch>
 	<!-- All settings -->
 	<arg name="robot_name" default="rmf_obelix"/>
-	<arg name="gazebo_gui_en" default="true"/>
+	<arg name="gazebo_gui_en" default="false"/>
   <arg name="use_sim_time" default="true"/>
   <arg name="rviz_en" default="true" />
   <arg name="launch_prefix" default=""/> <!-- gdb -ex run //args -->
@@ -45,6 +45,7 @@
 			<rosparam command="load" file="$(find rotors_gazebo)/resource/lee_controller_$(arg robot_name).yaml" />
 			<rosparam command="load" file="$(find rotors_gazebo)/resource/$(arg robot_name).yaml" />
 			<remap from="odometry" to="odometry_sensor1/odometry" />
+			<param name="use_acc_input" value="true" type="bool" />
 		</node>
 
 		<!-- <node name="joy_node" pkg="joy" type="joy_node" />
